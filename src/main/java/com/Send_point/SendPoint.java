@@ -84,7 +84,7 @@ public class SendPoint {
             // Create send message
             msg = service.users().messages().send("me", msg).execute();
             System.out.println("Message id: " + msg.getId());
-            System.out.println(msg.toPrettyString());
+            //System.out.println(msg.toPrettyString());
         } catch (GoogleJsonResponseException e) {
             // TODO(developer) - handle error appropriately
             GoogleJsonError error = e.getDetails();

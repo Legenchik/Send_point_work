@@ -53,7 +53,7 @@ public class getStudentDontUsed {
 
     public static void main2() throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        final String spreadsheetId = "1gEyq6RD6MBQUOYgNhiNaCVM_JDzt3Bs3Df6s2XwLZs0";
+        final String spreadsheetId = "1OS9lHlYCumRJz4AWD61qUjq3nTjEHl-Mdul-VV2opvU";
 
         Sheets service =
                 new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -69,19 +69,27 @@ public class getStudentDontUsed {
             System.out.println(sheet.getProperties().getTitle());
 
             ValueRange response = service.spreadsheets().values()
-                    .get(spreadsheetId, sheet.getProperties().getTitle().toString()+"!A2:A6")
+                    .get(spreadsheetId, sheet.getProperties().getTitle().toString()+"")
                     .execute();
             List<List<Object>> values = response.getValues();
             if (values == null || values.isEmpty()) {
                 System.out.println("No data found.");
             } else {
+                int behindUp = 0;
                 //System.out.println(values);
                 for (List row : values) {
-                    int range = row.size();
-                    for(int range2=0;range>range2;range2++){
-                        System.out.printf("%s ", row.get(range2));
+                    if(behindUp>=6) {
+                        int range = row.size();
+                        for (int range2 = 0; range > range2; range2++) {
+                            if (row.get(range2).toString().isEmpty()!=true) {
+                                System.out.printf("%s \n ", row.get(range2));
+                            }
+                        }
+                        System.out.println("");
+                    }else{
+                        behindUp++;
                     }
-                    System.out.printf("\n");
+                    //System.out.printf("\n");
 
                 }
             }
@@ -89,6 +97,9 @@ public class getStudentDontUsed {
 
 
 
+    }
+    public static void main(String[] args) throws GeneralSecurityException, IOException {
+        main2();
     }
 }
 

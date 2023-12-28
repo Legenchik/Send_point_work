@@ -57,7 +57,7 @@ public class SheetsExampleWork {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
     private static List<Student> students = new ArrayList<>();
-    public static void StudentSubjectAndPoint(String tablePoint, String tableEmail, int startPoint, int nameTablePoint, int emailTablePoint) throws IOException, GeneralSecurityException {
+    public static void StudentSubjectAndPoint(String tablePoint, String tableEmail, int startPoint, int nameTablePoint,int lastNametablePoint, int emailTablePoint) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final String spreadsheetId = tablePoint;
 
@@ -85,35 +85,60 @@ public class SheetsExampleWork {
                 String sub="";
                 String[] subA= new String[30];        //TODO 5 зделать щоб приймав параметир з таблиці данних //було String[5+1];//5(row.size()); 5 зделать щоб приймав параметир з таблиці данних (предмет)
 
+                int forHourAndCredits=1;
+                int behindUp = 0;
+                int countStidents=-1;
+                boolean hourAndCredit=false;
+                boolean forSubjestWords = false;
+
                 for (List row : values) {
 
-                    int range = row.size();
-                    if(checkFirst){
-                        for(int range2=startPoint;range>range2;range2++) {               //Статичний студенти(range2=1 вставка в масив без піб студента//TODO range2 зделать щоб приймав параметир з таблиці данних (предмет)
-                            String subJ = subA[range2] + "= " + row.get(range2) + "; ";
-                            sub = sub + subJ;
-                        }
-                    }else{
-                        for(int range2=startPoint;range>range2;range2++) {     // ПРЕДМЕТИ//TODO range2 зделать щоб приймав параметир з таблиці данних (предмет)
-                            subA[range2] = row.get(range2).toString();
-                        }
+                    if(behindUp>=6) {//отступи від начала щоб вибирало тільки потрібні данні
+                        int range = row.size();
+                        if (checkFirst) {
+                            if(forHourAndCredits==2) { // Перевірка щоб дані про кредити та годинни не використовувались
+                                hourAndCredit = true;
+                            }
+                            for (int range2 = startPoint; range > range2; range2++) {               //Статичний студенти(range2=1 вставка в масив без піб студента//TODO range2 зделать щоб приймав параметир з таблиці данних (предмет)
+                                String subJ = subA[range2] + "= " + row.get(range2) + "; \n";
+                                sub = sub + subJ;
+                            }
+                            forHourAndCredits=2;
+                        } else {
+                            for (int range2 = startPoint; range > range2; range2++) {     // ПРЕДМЕТИ//TODO range2 зделать щоб приймав параметир з таблиці данних (предмет)
+                                subA[range2] = row.get(range2).toString();
+                            }
 
-                    }
-
-                    if(checkFirst) {
-                        Student std = new Student();
-                        std.setNumberOfGroup(sheet.getProperties().getTitle().toString());
-                        std.setName(row.get(0).toString());
-                        std.setSubject(sub);
-                        std.setEmail(StudentEmail(sheet.getProperties().getTitle().toString(),
+                        }
+                        if (checkFirst && hourAndCredit && forSubjestWords==false ) {
+                            Student std = new Student();
+                            std.setNumberOfGroup(sheet.getProperties().getTitle().toString());
+                            std.setName(row.get(1).toString());
+                            std.setSubject(sub);
+                            std.setEmail(StudentEmail(
                                                     std.getName(),
                                                     tableEmail,
                                                     nameTablePoint,
+                                                    lastNametablePoint,
                                                     emailTablePoint)); //TODO вставка айди таблиці з таблиці данних
-                        students.add(std);
+
+
+                            students.add(std);
+                            forSubjestWords=true;
+                            countStidents++;
+                        }
+                        else{
+                            if(countStidents!=-1) {
+                                students.get(countStidents).setSubjectWords(sub);
+                                forSubjestWords = false;
+                            }
+                        }
+                        checkFirst = true;
+                        sub = "";
+                    }else{
+                        behindUp++;
                     }
-                    checkFirst=true;
-                    sub="";
+
                 }
             }
         }
@@ -124,11 +149,11 @@ public class SheetsExampleWork {
         }
     }
 
-    public static String StudentEmail(String sheetName,String nameStudent,String sheetIndex, int numberStudent,int numberEmail) throws IOException, GeneralSecurityException {
+    public static String StudentEmail(String nameStudent,String sheetIndex, int numberStudent,int lastNameStudent, int numberEmail) throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final String spreadsheetId = sheetIndex;
-        final String range = sheetName;
+        final String range = "emails";
         Sheets service =
                 new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                         .setApplicationName(APPLICATION_NAME)
@@ -140,13 +165,15 @@ public class SheetsExampleWork {
         if (values == null || values.isEmpty()) {
         } else {
             for (List row : values) {
-                if (nameStudent.equals(row.get(numberStudent))) { //TODO получать данні з таблиці данних(row.get(0))
-                    return row.get(numberEmail).toString();     //TODO получать данні з таблиці данних(row.get(3))
+                String[] nameWithoutGroup=row.get(numberStudent).toString().split(" ");
+                int maxRange = nameWithoutGroup.length-1;
+                if (nameStudent.indexOf(nameWithoutGroup[maxRange])!=-1 && nameStudent.indexOf(row.get(lastNameStudent).toString())!=-1 ) { // получать данні з таблиці данних(row.get(0))
+                    return row.get(numberEmail).toString();     // получать данні з таблиці данних(row.get(3))
                 }
             }
         }
 
-        return null;
+        return "пошту не знайдено";
     }
 
     public static void getDataForStudent() throws IOException, GeneralSecurityException, MessagingException {
@@ -171,7 +198,8 @@ public class SheetsExampleWork {
                             row.get(1).toString(),
                             Integer.parseInt(row.get(2).toString()),
                             Integer.parseInt(row.get(3).toString()),
-                            Integer.parseInt(row.get(4).toString())
+                            Integer.parseInt(row.get(4).toString()),
+                            Integer.parseInt(row.get(5).toString())
                             );
                     break;
                 }
@@ -185,10 +213,13 @@ public class SheetsExampleWork {
     public static void SendPointAll(List<Student> studentsd) throws MessagingException, GeneralSecurityException, IOException {
         SendPoint sp = new SendPoint();
         for(Student std:studentsd){
-            sp.sendMail("Оцінки студента: "+std.getName()+" група: "+ std.getNumberOfGroup(),
-                    std.getSubject(),
-                    std.getEmail());
-
+            if(std.getEmail().equals("пошту не знайдено")==false) {
+                sp.sendMail("Оцінки студента: " + std.getName() + " група: " + std.getNumberOfGroup(),
+                        std.getSubject()+"\n"+std.getSubjectWords(),
+                        std.getEmail());
+            }else{
+                System.out.println("не знайдено пошту "+ std.getName());
+            }
         }
     }
 }

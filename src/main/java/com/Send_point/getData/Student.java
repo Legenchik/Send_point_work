@@ -9,6 +9,15 @@ public class Student {
     private String name;
     private String  subject;
     private String email;
+    private String subjectWords;
+
+    public String getSubjectWords() {
+        return subjectWords;
+    }
+
+    public void setSubjectWords(String subjectWords) {
+        this.subjectWords = subjectWords;
+    }
 
     public String getEmail() {
         return email;
@@ -42,6 +51,6 @@ public class Student {
         this.subject = subject;
     }
     public String allInfo(){
-        return numberOfGroup+"; " +name + "; " +subject +email;
+        return numberOfGroup+"; " +name + "; " +subject +email+"\n"+subjectWords+"\n";
     }
 }
