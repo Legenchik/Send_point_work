@@ -1,6 +1,7 @@
-package com.Send_point.getData;
+package com.Send_point.Gmail_And_Sheets_Points.Google_Sheets;
 
-import com.Send_point.SendPoint;
+import com.Send_point.Gmail_And_Sheets_Points.BuildClass.Student;
+import com.Send_point.Gmail_And_Sheets_Points.Google_Gmail.SendPoint;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SheetsExampleWork {
+public class GetDataFromPoint_Sheets {
 
     public static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
     public static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -41,7 +42,7 @@ public class SheetsExampleWork {
 
     public static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
-        InputStream in = SheetsExampleWork.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = GetDataFromPoint_Sheets.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
