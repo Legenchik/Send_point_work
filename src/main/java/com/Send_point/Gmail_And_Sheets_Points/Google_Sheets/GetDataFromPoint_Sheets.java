@@ -1,6 +1,7 @@
 package com.Send_point.Gmail_And_Sheets_Points.Google_Sheets;
 
 import com.Send_point.Gmail_And_Sheets_Points.BuildClass.Student;
+import com.Send_point.Gmail_And_Sheets_Points.GoogleCredentialsAndOtherHelp;
 import com.Send_point.Gmail_And_Sheets_Points.Google_Gmail.SendPoint;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -31,40 +32,15 @@ import java.util.List;
 
 public class GetDataFromPoint_Sheets {
 
-    public static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
-    public static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    public static final String TOKENS_DIRECTORY_PATH = "tokens";
 
-
-    private static final List<String> SCOPES = Arrays.asList(GmailScopes.GMAIL_SEND,SheetsScopes.SPREADSHEETS_READONLY);
-
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
-
-    public static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
-            throws IOException {
-        InputStream in = GetDataFromPoint_Sheets.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
-        if (in == null) {
-            throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
-        }
-        GoogleClientSecrets clientSecrets =
-                GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-                .setAccessType("offline")
-                .build();
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
-    }
     private static List<Student> students = new ArrayList<>();
     public static void StudentSubjectAndPoint(String tablePoint, String tableEmail, int startPoint, int nameTablePoint,int lastNametablePoint, int emailTablePoint) throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final String spreadsheetId = tablePoint;
 
         Sheets service =
-                new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                        .setApplicationName(APPLICATION_NAME)
+                new Sheets.Builder(HTTP_TRANSPORT, GoogleCredentialsAndOtherHelp.JSON_FACTORY, GoogleCredentialsAndOtherHelp.getCredentials(HTTP_TRANSPORT))
+                        .setApplicationName(GoogleCredentialsAndOtherHelp.APPLICATION_NAME)
                         .build();
 
         // Request for the spreadsheet.
@@ -156,8 +132,8 @@ public class GetDataFromPoint_Sheets {
         final String spreadsheetId = sheetIndex;
         final String range = "emails";
         Sheets service =
-                new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                        .setApplicationName(APPLICATION_NAME)
+                new Sheets.Builder(HTTP_TRANSPORT, GoogleCredentialsAndOtherHelp.JSON_FACTORY, GoogleCredentialsAndOtherHelp.getCredentials(HTTP_TRANSPORT))
+                        .setApplicationName(GoogleCredentialsAndOtherHelp.APPLICATION_NAME)
                         .build();
         ValueRange response = service.spreadsheets().values()
                 .get(spreadsheetId, range)
@@ -177,39 +153,7 @@ public class GetDataFromPoint_Sheets {
         return "пошту не знайдено";
     }
 
-    public static void getDataForStudent() throws IOException, GeneralSecurityException, MessagingException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        final String spreadsheetId = "1pgB6XYkjUkVo1ZqBtEx9ZBfi01FGvB3FYaRP_jHK4zw";
-        final String range = "1";
-        Sheets service =
-                new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                        .setApplicationName(APPLICATION_NAME)
-                        .build();
-        ValueRange response = service.spreadsheets().values()
-                .get(spreadsheetId, range)
-                .execute();
-        List<List<Object>> values = response.getValues();
-        if (values == null || values.isEmpty()) {
-            System.out.println("No data");
-        } else {
-            boolean checkFirst = false;
-            for (List row : values) {
-                if (checkFirst) {
-                    StudentSubjectAndPoint(row.get(0).toString(),
-                            row.get(1).toString(),
-                            Integer.parseInt(row.get(2).toString()),
-                            Integer.parseInt(row.get(3).toString()),
-                            Integer.parseInt(row.get(4).toString()),
-                            Integer.parseInt(row.get(5).toString())
-                            );
-                    break;
-                }
-                checkFirst=true;
-            }
-        }
-        SendPointAll(students);
 
-    }
 
     public static void SendPointAll(List<Student> studentsd) throws MessagingException, GeneralSecurityException, IOException {
         SendPoint sp = new SendPoint();

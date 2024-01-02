@@ -1,5 +1,6 @@
 package com.Send_point.Gmail_And_Sheets_Points.Google_Gmail;
 
+import com.Send_point.Gmail_And_Sheets_Points.GoogleCredentialsAndOtherHelp;
 import com.Send_point.Gmail_And_Sheets_Points.Google_Sheets.GetDataFromPoint_Sheets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonError;
@@ -53,8 +54,8 @@ public class SendPoint {
 
     public void sendMail(String subject, String massage,String toEmail) throws GeneralSecurityException, IOException, MessagingException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Gmail service = new Gmail.Builder(HTTP_TRANSPORT, GetDataFromPoint_Sheets.JSON_FACTORY, GetDataFromPoint_Sheets.getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(GetDataFromPoint_Sheets.APPLICATION_NAME)
+        Gmail service = new Gmail.Builder(HTTP_TRANSPORT, GoogleCredentialsAndOtherHelp.JSON_FACTORY, GoogleCredentialsAndOtherHelp.getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(GoogleCredentialsAndOtherHelp.APPLICATION_NAME)
                 .build();
 
 

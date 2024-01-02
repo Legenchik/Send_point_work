@@ -1,6 +1,6 @@
 package com.Send_point;
 
-import com.Send_point.Gmail_And_Sheets_Points.Google_Sheets.GetDataFromPoint_Sheets;
+import com.Send_point.Gmail_And_Sheets_Points.Main;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,7 +14,7 @@ public class SendPointApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SendPointApplication.class, args);
 		try {
-			GetDataFromPoint_Sheets.getDataForStudent();
+			Main.getDataForStudent();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} catch (GeneralSecurityException e) {
