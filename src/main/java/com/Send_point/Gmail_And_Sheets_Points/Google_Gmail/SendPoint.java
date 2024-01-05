@@ -52,7 +52,7 @@ public class SendPoint {
 
     private static final String fromEmailAddress = "legenchik228@gmail.com";
 
-    public void sendMail(String subject, String massage,String toEmail) throws GeneralSecurityException, IOException, MessagingException {
+    public String sendMail(String subject, String massage,String toEmail) throws GeneralSecurityException, IOException, MessagingException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Gmail service = new Gmail.Builder(HTTP_TRANSPORT, GoogleCredentialsAndOtherHelp.JSON_FACTORY, GoogleCredentialsAndOtherHelp.getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(GoogleCredentialsAndOtherHelp.APPLICATION_NAME)
@@ -84,7 +84,8 @@ public class SendPoint {
         try {
             // Create send message
             msg = service.users().messages().send("me", msg).execute();
-            System.out.println("Message id: " + msg.getId());
+            //System.out.println("Message id: " + msg.getId());
+            return "Message id: " + msg.getId();
             //System.out.println(msg.toPrettyString());
         } catch (GoogleJsonResponseException e) {
             // TODO(developer) - handle error appropriately
@@ -95,6 +96,7 @@ public class SendPoint {
                 throw e;
             }
         }
+        return "Помилка відправки";
     }
 
 //    public static void main(String[] args) throws MessagingException, GeneralSecurityException, IOException {

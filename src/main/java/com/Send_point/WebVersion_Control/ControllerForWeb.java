@@ -2,6 +2,7 @@ package com.Send_point.WebVersion_Control;
 
 import com.Send_point.Gmail_And_Sheets_Points.BuildClass.Student;
 import com.Send_point.Gmail_And_Sheets_Points.BuildClass.StudentsMore;
+import com.Send_point.Gmail_And_Sheets_Points.Google_Gmail.SendConrol;
 import com.Send_point.Gmail_And_Sheets_Points.Google_Sheets.GetDataFromPoint_Sheets_Web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -85,8 +87,19 @@ public class ControllerForWeb {
         return "CheckAndSend";
     }
     @PostMapping("/AllGood")
-    public String allGood(){
-        return "greeting";
+    public String allGood(Model model){
+        String out;
+        try {
+            out=SendConrol.SendPointAll(students);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        model.addAttribute("result",out);
+        return "GoodSend";
     }
 
 }

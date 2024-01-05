@@ -13,6 +13,17 @@ public class StudentsMore extends Student{
     public void setSubjectList(List<String> subjectList) {
         SubjectList = subjectList;
     }
+    public String forSendEmail(){
+        String out="";
+        for(String s:SubjectList){
+            out=out+s+"\n";
+        }
+        return out;
+    }
+
+    public String forErrorSend(){
+        return getNumberOfGroup()+" "+getName();
+    }
 
     public String forTest(){
         String out="";
