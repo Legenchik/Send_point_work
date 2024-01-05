@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="${name}" />
+<form action="/greeting" method="post" id="form1">
+    Посилання на таблицю оцінок:<br>
+    <input type="text" name="TableOfPoints"><br><br>
+
+    Посилання на таблицю з поштами:<br>
+    <input type="text" name="TableOfEmail"><br><br>
+
+    Відступ з верху до початку предметів(число):<br>
+    <input type="number" name="FirsNumberToPoints" value="6"><br><br>
+
+    Де починаються оцінки які потрібно відправити(число):<br>
+    <input type="number" name="StartPointsNumber" value="3"><br><br>
+
+    Рядок з ПІБ:<br>
+    <input type="number" name="RowWith_PIB" value="1"><br><br>
+
+    Рядок який потрібно пропустити(наприклад години та кредити):<br>
+    <input type="number" name="RowForDontUsed" value="7"><br><br>
+
+    Одна або декілька груп<br>
+    (якщо декільк розділяти пробілом, якщо всі то нічого не змінювати)<br>
+    (Групи вказувати так як підписані аркуші в таблиці):<br>
+    <input type="text" name="OneOrMore" value="All"><br><br>
+
+    Рядок з Ім'ям студента в таблиці з поштами(число):<br>
+    <input type="number" name="RowWithName" value="0"><br><br>
+
+    Рядок з Прізвищем студента в таблиці з поштами(число):<br>
+    <input type="number" name="RowWithLastName" value="1"><br><br>
+
+    Рядок з Поштою студента в таблиці з поштами(число):<br>
+    <input type="number" name="RowWithEmail" value="2"><br><br>
+
+    Де знаходиться пошти(в 1 аркуші, в аркуша підписаних як групи в таблиці оцінок або різні назви в таблиця):<br>
+    <select name="ChoiceForEmailTable">
+        <option value="InOne">В одному</option>
+        <option value="InMany" >По групах</option>
+        <option value="InOtherTable">Не по групах</option>
+    </select><br><br>
+
+    <input type="submit" value="Перевірити">
+</form>
+
+
+
+</body>
+</html>

@@ -13,15 +13,15 @@ public class SendPointApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SendPointApplication.class, args);
-		try {
-			Main.getDataForStudent();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (GeneralSecurityException e) {
-			throw new RuntimeException(e);
-		} catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+//		try {
+//			Main.getDataForStudent();
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		} catch (GeneralSecurityException e) {
+//			throw new RuntimeException(e);
+//		} catch (MessagingException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
 }
